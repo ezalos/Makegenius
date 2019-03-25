@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2019/03/24 18:35:40 by ldevelle         ###   ########.fr        #
+#    Updated: 2019/03/25 18:27:09 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ DFLAGS = -Wall -Wextra -Werror -fsanitize=address,undefined -g3 -pedantic\
 MASTER		= srcs/
 
 MAIN_FOLD = inout maths mem strings structures terminal big
+MAIN_FOLD = srcs
 
 HEAD_DIR = ./includes/
 
@@ -68,7 +69,10 @@ HEADERS		+=	$(AUTO_SRC)\
 AUTO_SEAD	=	$(HEAD_DIR)$(AUTO_SRC)
 AUTO_PEAD	=	$(HEAD_DIR)$(AUTO_HEAD)
 
-IFOBJDIR	= $(shell ls | grep objs)
+
+IF_FOLDS	=	$(MAIN_FOLD:%=find $(MASTER) -xdev -type d | cut -s -d '/' -f 2 | sort -u)
+IF_FOLDS	=	$(shell ls $(MASTER) | grep objs)
+IFOBJDIR	=	$(shell ls | grep objs)
 
 DIR_SCRIPT	=	./scripts/
 
@@ -116,7 +120,15 @@ SRC =
 PAT =
 DIR =
 
+DIR_OBJ = ./objs/
+IF_FOLDS	=	$(shell find $(MASTER) -xdev -type d | cut -s -d '/' -f 3 | sort -u)
+IF_REF		=	$(shell echo "$(MAIN_FOLD)" | tr " " "\n" | sort)
+IF_REF		=	$(shell echo "$(MAIN_FOLD)" | tr " " "\n" | sort)
+
+ifeq ("$(IF_FOLDS)","$(IF_REF)")
 include $(include_dep)
+endif
+
 
 OBJ = $(PAT:%.c=%.o)
 OBJS = $(PAT:%.c=$(DIR_OBJ)%.o)
@@ -198,6 +210,10 @@ fclean : clean
 	@echo "\$(YELLOW)$(NAME) \$(END)\\thas been \$(GREEN)\\t\\t\\t  $@\$(END)"
 
 re : fclean all
+
+k:
+	@echo $(IF_FOLDS)
+	@echo $(IF_REF)
 
 ##############################################################################
 ##############################################################################
