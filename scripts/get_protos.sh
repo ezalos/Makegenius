@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/22 19:02:24 by ldevelle          #+#    #+#              #
-#    Updated: 2019/10/22 05:45:09 by ldevelle         ###   ########.fr        #
+#    Updated: 2019/10/22 06:56:34 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,10 +37,11 @@ printf $spe | awk '{ print toupper($1) }' >> $name
 echo "" >> $name
 
 find $3$2$1 $4 -type f -exec cat {} \+ |
+grep -v "static" |
 grep -A1 "^[^$(printf '\t')]" |
 grep -e "(" -e ")" |
 grep -v -e '{' -e '}' -e "/--" -e '#' -e ";" -e "^$" |
-grep -v -e ":+:" -e "+:+" -e "\*\* " -e "\*\*\$" -e "\$\$" -e "{" -e "}" -e "/\\*" -e "\\*/" -e "--" -e static -e while -e else -e "\*\\\\" -e if -e ";" -e "#include " -e "=" -e "->" -e "//" -e "\*\*" |
+grep -v -e ":+:" -e "+:+" -e "\*\* " -e "\*\*\$" -e "^\*\*" -e "\$\$" -e "{" -e "}" -e "/\\*" -e "\\*/" -e "--" -e while -e else -e "\*\\\\" -e if -e ";" -e "#include " -e "=" -e "->" -e "//" |
 tr -s '\t' '\t\t' >> $name
 
 sed -i '' "s~)$~);~g" $name

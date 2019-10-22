@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2019/10/22 06:37:45 by ldevelle         ###   ########.fr        #
+#    Updated: 2019/10/22 07:21:03 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,8 @@ TESTEUR = test
 
 CC 		= gcc
 AR		= ar -rcs
+
+LIB_PRJCT = n
 
 CFLAGS	= -Wall -Wextra -Werror
 
@@ -191,13 +193,19 @@ endef
 ##########################
 
 all :		$(NAME) auteur $(DIR_OBJ)
-			@make -j $(NAME)
 
+ifeq ($(LIB_PRJCT), y)
+$(NAME):	$(OBJS) $(HEAD_DIR)
+	@$(call run_and_test, $(AR) $(NAME) $(OBJS))
+else
 $(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)
 	@$(call run_and_test, $(CC) $(CFLAGS) -o $(NAME) $(LIB) -I./$(HEAD_DIR) $(OBJS))
+endif
 
 $(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
 	@$(call run_and_test, $(CC) $(CFLAGS) -I$(HEAD_DIR) -o $@ -c $<)
+	$(CC) $(CFLAGS) -MM -I$(HEAD_DIR) -c $< > $@.mk
+	%include $@.mk
 
 $(LIB): FORCE
 		@$(MAKE) -C $(LIB_DIR)
