@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2019/10/22 06:05:23 by ldevelle         ###   ########.fr        #
+#    Updated: 2019/10/22 06:07:57 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,7 +72,7 @@ include_pat	+=	$(mk_p)pat_.mk
 include_src	=	$(MAIN_FOLD:%=$(mk_s)src_%.mk)
 include_src	+=	$(mk_s)src_.mk
 
-include_dep	= $(include_src) $(include_pat) $(include_dir)
+include_dep	=	$(include_src) $(include_pat) $(include_dir)
 
 SRC =
 PAT =
