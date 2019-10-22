@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2019/10/22 09:24:26 by ldevelle         ###   ########.fr        #
+#    Updated: 2019/10/23 01:35:16 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ DIR_OBJ 	=	./objs/
 
 MAIN_FOLD 	=	$(shell find srcs -maxdepth 1 -type d | grep '/' | cut -d '/' -f 2)
 MASTER		= 	srcs/
+$(shell mkdir -p $(MASTER))
 AUTO_HEAD	=	$(MAIN_FOLD:%=auto/auto_%.h)
 
 HEAD		=	$(HEADERS:%=$(HEAD_DIR)%)
