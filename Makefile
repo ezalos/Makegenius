@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2019/10/22 07:29:54 by ldevelle         ###   ########.fr        #
+#    Updated: 2019/10/22 09:24:26 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -204,8 +204,6 @@ endif
 
 $(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
 	@$(call run_and_test, $(CC) $(CFLAGS) -I$(HEAD_DIR) -o $@ -c $<)
-	$(CC) $(CFLAGS) -MM -I$(HEAD_DIR) -c $< > $@.mk
-	%include $@.mk
 
 $(LIB): FORCE
 		@$(MAKE) -C $(LIB_DIR)
