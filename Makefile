@@ -6,17 +6,21 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2019/03/25 18:27:09 by ldevelle         ###   ########.fr        #
+#    Updated: 2019/10/22 04:08:59 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = libft.a
+NAME 	= ldevelle
 
-CC = gcc
+TESTEUR = test
 
-CFLAGS = -Wall -Wextra -Werror
+CC 		= gcc
 
-DFLAGS = -Wall -Wextra -Werror -fsanitize=address,undefined -g3 -pedantic\
+AR		= ar -rcs
+
+CFLAGS	= -Wall -Wextra -Werror
+
+DFLAGS	= -Wall -Wextra -Werror -fsanitize=address,undefined -g3 -pedantic\
 -ansi -O2 -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int\
 -Werror-implicit-function-declaration -Wmain -Wparentheses -Wsequence-point\
 -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas\
@@ -39,63 +43,23 @@ DFLAGS = -Wall -Wextra -Werror -fsanitize=address,undefined -g3 -pedantic\
 ##############################################################################
 ##############################################################################
 
-MASTER		= srcs/
+login 		=	ldevelle
 
-MAIN_FOLD = inout maths mem strings structures terminal big
-MAIN_FOLD = srcs
+MASTER		= 	srcs/
 
-HEAD_DIR = ./includes/
+MAIN_FOLD 	=
 
-HEADERS	=	ft_printf.h\
-			libft.h\
-			time_exe.h
+HEAD_DIR 	= 	./includes/
 
-AUTO_HEAD	= auto.h
+HEADERS		=	$(AUTO_HEAD)\
+				auto.h\
+				ft_printf.h\
+				libft.h\
+				structures.h\
+				terminal_defines.h\
+				time_exe.h
 
-DIR_OBJ = ./objs/
-
-MOVE_IT	=	$(MAIN_FOLD:%=$(MASTER)%)
-
-##########################
-##						##
-##	 IMPORTANT FILES	##
-##						##
-##########################
-
-# DIR_OBJ = ./objs/
-HEADERS		+=	$(AUTO_SRC)\
-				$(AUTO_HEAD)
-
-AUTO_SEAD	=	$(HEAD_DIR)$(AUTO_SRC)
-AUTO_PEAD	=	$(HEAD_DIR)$(AUTO_HEAD)
-
-
-IF_FOLDS	=	$(MAIN_FOLD:%=find $(MASTER) -xdev -type d | cut -s -d '/' -f 2 | sort -u)
-IF_FOLDS	=	$(shell ls $(MASTER) | grep objs)
-IFOBJDIR	=	$(shell ls | grep objs)
-
-DIR_SCRIPT	=	./scripts/
-
-SRC_SCRIPT	=	get_protos.sh\
-				get_mk_srcs.sh\
-				get_master_head.sh
-
-PAT_SCRIPT	=	$(SRC_SCRIPT:%=$(DIR_SCRIPT)%)
-
-DIR_MK_DEP	=	./mk_dependencies
-
-mk_d		= 	$(DIR_MK_DEP)/DIR/
-mk_s		= 	$(DIR_MK_DEP)/SRC/
-mk_p		= 	$(DIR_MK_DEP)/PAT/
-
-mk_all		=	$(mk_d) $(mk_s) $(mk_p)
-
-AUTO_DIR	=	auto/
-AUTO_PAT	=	$(HEAD_DIR)$(AUTO_DIR)
-
-MUST		=	$(DIR_OBJ)\
-				$(DIR_SCRIPT) $(PAT_SCRIPT)\
-				$(AUTO_PAT)
+DIR_OBJ 	= ./objs/
 
 ##########################
 ##						##
@@ -103,16 +67,27 @@ MUST		=	$(DIR_OBJ)\
 ##						##
 ##########################
 
-AUTO_SRC	= $(MAIN_FOLD:%=$(AUTO_DIR)auto_%.h)
+AUTO_HEAD	= $(MAIN_FOLD:%=auto/auto_%.h)
 
-HEADERS		=	$(HEADS:%=$(HEAD_DIR)%)
+HEAD		=	$(HEADERS:%=$(HEAD_DIR)%)
 
-update_head	=	$(MAIN_FOLD:%=sh $(DIR_SCRIPT)get_protos.sh % $(MASTER);)
-update_dep	=	$(MAIN_FOLD:%=sh $(DIR_SCRIPT)get_mk_srcs.sh % $(MASTER);)
+update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos.sh % $(MASTER);)
+update_head	+=	sh scripts/get_protos.sh '' $(MASTER) '' '-d 1';
+update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs.sh % $(MASTER);)
+update_dep	+=	sh scripts/get_mk_srcs.sh '' $(MASTER) '' '-d 1';
+
+mk			=	./mk_dependencies
+
+mk_d		= 	$(mk)/DIR/
+mk_s		= 	$(mk)/SRC/
+mk_p		= 	$(mk)/PAT/
 
 include_dir	=	$(MAIN_FOLD:%=$(mk_d)dir_%.mk)
+include_dir	+=	$(mk_d)dir_.mk
 include_pat	=	$(MAIN_FOLD:%=$(mk_p)pat_%.mk)
+include_pat	+=	$(mk_p)pat_.mk
 include_src	=	$(MAIN_FOLD:%=$(mk_s)src_%.mk)
+include_src	+=	$(mk_s)src_.mk
 
 include_dep	= $(include_src) $(include_pat) $(include_dir)
 
@@ -120,27 +95,32 @@ SRC =
 PAT =
 DIR =
 
-DIR_OBJ = ./objs/
-IF_FOLDS	=	$(shell find $(MASTER) -xdev -type d | cut -s -d '/' -f 3 | sort -u)
-IF_REF		=	$(shell echo "$(MAIN_FOLD)" | tr " " "\n" | sort)
-IF_REF		=	$(shell echo "$(MAIN_FOLD)" | tr " " "\n" | sort)
-
-ifeq ("$(IF_FOLDS)","$(IF_REF)")
+$(shell mkdir -p $(mk) $(mk_d) $(mk_s) $(mk_p))
+$(shell touch $(include_dep))
 include $(include_dep)
-endif
-
 
 OBJ = $(PAT:%.c=%.o)
-OBJS = $(PAT:%.c=$(DIR_OBJ)%.o)
-# $(shell echo $(OBJS))
+OBJS = $(PAT:$(MASTER)%.c=$(DIR_OBJ)%.o)
 
-MSG ?= Makefile automated push
+ARG ?= Makefile automated push
+
 ##########################
 ##						##
 ##		 COLORS			##
 ##						##
 ##########################
-
+UNAME := $(shell uname)
+ifeq ($(UNAME),Linux)
+RED     = \e[31m
+GREEN   = \e[32m
+YELLOW  = \e[33m
+BLUE	= \e[34m
+MAGENTA	= \e[35m
+CYAN	= \e[36m
+END     = \e[0m
+update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos.sh % $(MASTER);)
+update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs.sh % $(MASTER);)
+else
 RED     = \x1b[31m
 GREEN   = \x1b[32m
 YELLOW  = \x1b[33m
@@ -148,6 +128,7 @@ BLUE	= \x1b[34m
 MAGENTA	= \x1b[35m
 CYAN	= \x1b[36m
 END     = \x1b[0m
+endif
 
 COM_COLOR   = $(BLUE)
 OBJ_COLOR   = $(CYAN)
@@ -160,6 +141,27 @@ OK_STRING    = [OK]
 ERROR_STRING = [ERROR]
 WARN_STRING  = [WARNING]
 COM_STRING   = Compiling
+
+REQUEST = 'read -p "Enter a commit message:	" pwd && echo $$pwd'
+COMMIT_MESSAGE ?= $(shell bash -c $(REQUEST))
+
+ifeq ($(f), no)
+CFLAGS +=
+VALGRIND =
+else ifeq ($(f), n)
+CFLAGS =
+VALGRIND =
+else ifeq ($(f), f)
+CFLAGS +=  -fsanitize=address,undefined -g3
+VALGRIND =
+else ifeq ($(f), v)
+CFLAGS += -g3
+SHOW_LEAK = --show-leak-kinds=definite
+VALGRIND = valgrind --track-origins=yes --leak-check=full $(SHOW_LEAK)
+else ifeq ($(f), h)
+CFLAGS = $(DFLAGS)
+VALGRIND =
+endif
 
 define run_and_test
 printf "%b" "$(COM_COLOR)$(COM_STRING) $(OBJ_COLOR)$(@F)$(NO_COLOR)\r"; \
@@ -176,6 +178,8 @@ printf "%b" "$(COM_COLOR)$(COM_STRING) $(OBJ_COLOR)$(@F)$(NO_COLOR)\r"; \
 	rm -f $@.log; \
 	exit $$RESULT
 endef
+# @$(call run_and_test, $(CC) $(CFLAGS) -I$(HEAD_DIR) -o $@ -c $<)
+# @$(call run_and_test, $(CC) -o $(NAME) $(OBJS))
 
 ##############################################################################
 ##############################################################################
@@ -193,13 +197,14 @@ endef
 ##						##
 ##########################
 
-all :		$(NAME)
+all :		auteur $(DIR_OBJ)
+			@make -j $(NAME)
 
-$(NAME):	Makefile $(PAT) $(OBJS) $(HEAD)
-			@$(call run_and_test, ar -rcs $(NAME) $(OBJS))
+$(NAME):	$(OBJS)
+	$(CC) -o $(NAME) $(OBJS)
 
-$(DIR_OBJ)%.o:%.c
-			@$(call run_and_test, $(CC) $(CFLAGS) -I$(HEAD_DIR) -o $@ -c $<)
+$(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
+	$(CC) $(CFLAGS) -I$(HEAD_DIR) -o $@ -c $<
 
 clean :
 	@rm -f $(OBJS)
@@ -211,10 +216,6 @@ fclean : clean
 
 re : fclean all
 
-k:
-	@echo $(IF_FOLDS)
-	@echo $(IF_REF)
-
 ##############################################################################
 ##############################################################################
 ##																			##
@@ -225,80 +226,49 @@ k:
 ##############################################################################
 ##############################################################################
 
+auteur :
+		@echo $(login) > auteur
+
+$(DIR_OBJ) :
+		@mkdir -p $(DIR_OBJ)
+
+t	:	all
+		$(CC) $(CFLAGS) -I$(HEAD_DIR) $(NAME) main.c -o $(TESTEUR)
+		$(VALGRIND) ./$(TESTEUR) "$(ARG)"
+
 git :
 		@git add -A
 		@git status
-		git commit -am "$(MSG)"
+		@git commit -am "$(COMMIT_MESSAGE)"
 		@git push
 
-# file			:
-# 					$(make) $(DIR_MK_DEP)
-# 					$(make) $(mk_all)
-# 					$(make) $(DIR_OBJ)
-# 					$(make) $(AUTO_PAT)
-# 					$(make) $(AUTO_SEAD)
-# 					$(make) $(AUTO_PEAD)
-#
-# rand			:
-# 					@rm -rf $(DIR_MK_DEP)
-# 					@mkdir $(DIR_MK_DEP)
-# 					@rm -rf $(mk_d) $(mk_s) $(mk_p)
-# 					@mkdir $(mk_d) $(mk_s) $(mk_p)
-# 					@$(update_dep)
-# 					@rm -rf $(DIR_OBJ)
-# 					@mkdir $(DIR_OBJ)
-# 					@find $(MASTER) -type d -exec mkdir $(DIR_OBJ){} \;
-# 					@rm -rf $(AUTO_PAT)
-# 					@mkdir $(AUTO_PAT)
-# 					@$(update_head)
-# 					@sh scripts/get_master_head.sh $(HEAD_DIR)
+file :	object_ready auto_dir
+		@rm -rf $(mk_d) $(mk_s) $(mk_p)
+		@mkdir $(mk_d) $(mk_s) $(mk_p)
+		@$(update_head)
+		@$(update_dep)
+		@echo "\$(YELLOW)automatic sources\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
+		@sh scripts/get_master_head.sh $(HEAD_DIR)
+		@echo "\$(YELLOW)automatic headers\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
+		@$(MAKE)
 
+auto_dir :
+		@mkdir -p $(HEAD_DIR)auto
 
-$(PAT)			:	$(mk_all) $(DIR_OBJ) $(AUTO_PAT) $(AUTO_PEAD)
+object_ready :	$(DIR_OBJ)
+		@rm -rf $(DIR_OBJ)/*
+		@find $(MASTER) -type d -exec mkdir objs/{} \;
+		@find $(MASTER) -type d -exec touch objs/{}/.gitkeep \;
+		@mv -f $(DIR_OBJ)$(MASTER)* ./$(DIR_OBJ)
+		@rm -rf $(DIR_OBJ)$(MASTER)
+		@echo "\$(YELLOW)objects paths\$(END)\\t\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
-
-$(DIR_OBJ)		:
-					@rm -rf $(DIR_OBJ)
-					@mkdir $(DIR_OBJ)
-					@rm -rf $(DIR_OBJ)/*
-					@find $(MASTER)$(MAIN_FOLD) -type d -exec mkdir objs/{} \;
-					@mv -f $(DIR_OBJ)$(MASTER)* $(DIR_OBJ)
-					@rm -rf $(DIR_OBJ)$(MASTER)
-
-$(AUTO_PAT)		:	$(AUTO_PEAD)
-					@mkdir $(AUTO_PAT)
-					@$(update_head)
-					@sh scripts/get_master_head.sh $(HEAD_DIR)
-
-$(AUTO_PEAD)	:
-					@$(update_head)
-					@sh scripts/get_master_head.sh $(HEAD_DIR)
-
-$(mk_all)		:	$(DIR_MK_DEP)
-					@rm -rf $(mk_d) $(mk_s) $(mk_p)
-					@mkdir $(mk_d) $(mk_s) $(mk_p)
-					@$(update_dep)
-
-$(DIR_MK_DEP)	:
-					@rm -rf $(DIR_MK_DEP)
-					@mkdir $(DIR_MK_DEP)
-
-check :
-		bash /Users/ldevelle/42/TESTS/42FileChecker/42FileChecker.sh
-
-
-##########################
-##						##
-##		 PROTEC			##
-##						##
-##########################
-
+FORCE:
 
 ##########################
 ##						##
 ##		 .PHONY			##
 ##						##
 ##########################
-FORCE:
 
 .PHONY : all clean fclean re git file object_ready check FORCE
