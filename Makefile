@@ -6,38 +6,23 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2019/10/22 04:08:59 by ldevelle         ###   ########.fr        #
+#    Updated: 2019/10/22 05:11:55 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME 	= ldevelle
-
 TESTEUR = test
 
 CC 		= gcc
-
 AR		= ar -rcs
 
 CFLAGS	= -Wall -Wextra -Werror
-
-DFLAGS	= -Wall -Wextra -Werror -fsanitize=address,undefined -g3 -pedantic\
--ansi -O2 -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int\
--Werror-implicit-function-declaration -Wmain -Wparentheses -Wsequence-point\
--Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas\
--Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wbad-function-cast\
--Wwrite-strings -Wconversion -Wsign-compare -Waggregate-return\
--Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations\
--Wmissing-noreturn -Wformat -Wmissing-format-attribute\
--Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs\
--Winline -Wlong-long -Wunreachable-code
-
-#CFLAGS = $(DFLAGS)
 
 ##############################################################################
 ##############################################################################
 ##																			##
 ##									----									##
-##									IFEQ									##
+##								 TO_CHANGE									##
 ##									----									##
 ##																			##
 ##############################################################################
@@ -45,21 +30,18 @@ DFLAGS	= -Wall -Wextra -Werror -fsanitize=address,undefined -g3 -pedantic\
 
 login 		=	ldevelle
 
-MASTER		= 	srcs/
+MAIN_FOLD 	=	$(shell find srcs -maxdepth 1 -type d | grep '/' | cut -d '/' -f 2)
 
-MAIN_FOLD 	=
+LIB_DIR		=	./libft
+LIB			=	$(LIB_DIR)/libft.a
 
 HEAD_DIR 	= 	./includes/
-
 HEADERS		=	$(AUTO_HEAD)\
-				auto.h\
-				ft_printf.h\
-				libft.h\
-				structures.h\
-				terminal_defines.h\
-				time_exe.h
+				head.h
 
-DIR_OBJ 	= ./objs/
+HEAD_PATH	=	$(HEAD_DIR)/$(HEAD)
+
+DIR_OBJ 	=	./objs/
 
 ##########################
 ##						##
@@ -67,7 +49,8 @@ DIR_OBJ 	= ./objs/
 ##						##
 ##########################
 
-AUTO_HEAD	= $(MAIN_FOLD:%=auto/auto_%.h)
+MASTER		= 	srcs/
+AUTO_HEAD	=	$(MAIN_FOLD:%=auto/auto_%.h)
 
 HEAD		=	$(HEADERS:%=$(HEAD_DIR)%)
 
@@ -99,10 +82,10 @@ $(shell mkdir -p $(mk) $(mk_d) $(mk_s) $(mk_p))
 $(shell touch $(include_dep))
 include $(include_dep)
 
-OBJ = $(PAT:%.c=%.o)
-OBJS = $(PAT:$(MASTER)%.c=$(DIR_OBJ)%.o)
+OBJ 	= $(PAT:%.c=%.o)
+OBJS	= $(PAT:$(MASTER)%.c=$(DIR_OBJ)%.o)
 
-ARG ?= Makefile automated push
+ARG 	?= ldevelle
 
 ##########################
 ##						##
@@ -111,23 +94,23 @@ ARG ?= Makefile automated push
 ##########################
 UNAME := $(shell uname)
 ifeq ($(UNAME),Linux)
-RED     = \e[31m
-GREEN   = \e[32m
-YELLOW  = \e[33m
-BLUE	= \e[34m
-MAGENTA	= \e[35m
-CYAN	= \e[36m
-END     = \e[0m
+RED     	= \e[31m
+GREEN   	= \e[32m
+YELLOW  	= \e[33m
+BLUE		= \e[34m
+MAGENTA		= \e[35m
+CYAN		= \e[36m
+END     	= \e[0m
 update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos.sh % $(MASTER);)
 update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs.sh % $(MASTER);)
 else
-RED     = \x1b[31m
-GREEN   = \x1b[32m
-YELLOW  = \x1b[33m
-BLUE	= \x1b[34m
-MAGENTA	= \x1b[35m
-CYAN	= \x1b[36m
-END     = \x1b[0m
+RED     	= \x1b[31m
+GREEN   	= \x1b[32m
+YELLOW  	= \x1b[33m
+BLUE		= \x1b[34m
+MAGENTA		= \x1b[35m
+CYAN		= \x1b[36m
+END     	= \x1b[0m
 endif
 
 COM_COLOR   = $(BLUE)
@@ -137,31 +120,42 @@ ERROR_COLOR = $(RED)
 WARN_COLOR  = $(YELLOW)
 NO_COLOR    = $(END)
 
-OK_STRING    = [OK]
-ERROR_STRING = [ERROR]
-WARN_STRING  = [WARNING]
-COM_STRING   = Compiling
+OK_STRING    	= [OK]
+ERROR_STRING 	= [ERROR]
+WARN_STRING  	= [WARNING]
+COM_STRING   	= Compiling
 
-REQUEST = 'read -p "Enter a commit message:	" pwd && echo $$pwd'
+REQUEST 		= 'read -p "Enter a commit message:	" pwd && echo $$pwd'
 COMMIT_MESSAGE ?= $(shell bash -c $(REQUEST))
 
 ifeq ($(f), no)
-CFLAGS +=
-VALGRIND =
+CFLAGS 		+=
+VALGRIND 	=
 else ifeq ($(f), n)
-CFLAGS =
-VALGRIND =
+CFLAGS 		=
+VALGRIND 	=
 else ifeq ($(f), f)
-CFLAGS +=  -fsanitize=address,undefined -g3
-VALGRIND =
+CFLAGS 		+=  -fsanitize=address,undefined -g3
+VALGRIND 	=
 else ifeq ($(f), v)
-CFLAGS += -g3
-SHOW_LEAK = --show-leak-kinds=definite
-VALGRIND = valgrind --track-origins=yes --leak-check=full $(SHOW_LEAK)
+CFLAGS 		+= -g3
+SHOW_LEAK 	= --show-leak-kinds=definite
+VALGRIND 	= valgrind --track-origins=yes --leak-check=full $(SHOW_LEAK)
 else ifeq ($(f), h)
-CFLAGS = $(DFLAGS)
-VALGRIND =
+CFLAGS 		= -fsanitize=address,undefined -g3 -pedantic\
+-ansi -O2 -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int\
+-Werror-implicit-function-declaration -Wmain -Wparentheses -Wsequence-point\
+-Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas\
+-Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wbad-function-cast\
+-Wwrite-strings -Wconversion -Wsign-compare -Waggregate-return\
+-Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations\
+-Wmissing-noreturn -Wformat -Wmissing-format-attribute\
+-Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs\
+-Winline -Wlong-long -Wunreachable-code
+VALGRIND 	=
 endif
+
+FETCH_MODULES	= $(shell grep "url" .gitmodules | cut -d '=' -f 2)
 
 define run_and_test
 printf "%b" "$(COM_COLOR)$(COM_STRING) $(OBJ_COLOR)$(@F)$(NO_COLOR)\r"; \
@@ -178,8 +172,8 @@ printf "%b" "$(COM_COLOR)$(COM_STRING) $(OBJ_COLOR)$(@F)$(NO_COLOR)\r"; \
 	rm -f $@.log; \
 	exit $$RESULT
 endef
-# @$(call run_and_test, $(CC) $(CFLAGS) -I$(HEAD_DIR) -o $@ -c $<)
-# @$(call run_and_test, $(CC) -o $(NAME) $(OBJS))
+# @$(call run_and_test, $(CC) $(CFLAGS) -o $(NAME) $(LIB) -I./$(HEAD_DIR) $(OBJS))
+# @$(call run_and_test, $(CC) $(CFLAGS) $(LIB) -I$(HEAD_DIR) -o $@ -c $<)
 
 ##############################################################################
 ##############################################################################
@@ -201,10 +195,10 @@ all :		auteur $(DIR_OBJ)
 			@make -j $(NAME)
 
 $(NAME):	$(OBJS)
-	$(CC) -o $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(LIB) -I./$(HEAD_DIR) $(OBJS) main.c
 
 $(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
-	$(CC) $(CFLAGS) -I$(HEAD_DIR) -o $@ -c $<
+	$(CC) $(CFLAGS) -I$(HEAD_DIR) $(LIB) -o $@ -c $<
 
 clean :
 	@rm -f $(OBJS)
@@ -236,24 +230,39 @@ t	:	all
 		$(CC) $(CFLAGS) -I$(HEAD_DIR) $(NAME) main.c -o $(TESTEUR)
 		$(VALGRIND) ./$(TESTEUR) "$(ARG)"
 
+# unit_test :
+
+# big :
+# n ?= 10
+# all:
+# n=$(n); \
+# while [ $${n} -gt 0 ] ; do \
+#     echo $$n ; \
+#     n=`expr $$n - 1`; \
+# done; \
+# true
+
+# last :	all
+# 		@./$(NAME) $(shell cat tests/last)
+
+
+# @$(CC) $(CFLAGS) ./srcs/show_stats.c $(LIB) -o stats
+# @./stats $(nb)
+
 git :
 		@git add -A
 		@git status
 		@git commit -am "$(COMMIT_MESSAGE)"
 		@git push
 
-file :	object_ready auto_dir
-		@rm -rf $(mk_d) $(mk_s) $(mk_p)
-		@mkdir $(mk_d) $(mk_s) $(mk_p)
-		@$(update_head)
-		@$(update_dep)
-		@echo "\$(YELLOW)automatic sources\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
-		@sh scripts/get_master_head.sh $(HEAD_DIR)
-		@echo "\$(YELLOW)automatic headers\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
+file : 	srcs head
 		@$(MAKE)
 
-auto_dir :
-		@mkdir -p $(HEAD_DIR)auto
+srcs :	object_ready
+		@rm -rf $(mk_d) $(mk_s) $(mk_p)
+		@mkdir $(mk_d) $(mk_s) $(mk_p)
+		@$(update_dep)
+		@echo "\$(YELLOW)automatic sources\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
 object_ready :	$(DIR_OBJ)
 		@rm -rf $(DIR_OBJ)/*
@@ -262,6 +271,17 @@ object_ready :	$(DIR_OBJ)
 		@mv -f $(DIR_OBJ)$(MASTER)* ./$(DIR_OBJ)
 		@rm -rf $(DIR_OBJ)$(MASTER)
 		@echo "\$(YELLOW)objects paths\$(END)\\t\\thas been \$(GREEN)\\t\\t  created\$(END)"
+
+head :	auto_dir
+		@$(update_head)
+		@sh scripts/get_master_head.sh $(HEAD_DIR)
+		@echo "\$(YELLOW)automatic headers\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
+
+auto_dir :	head
+		@mkdir -p $(HEAD_DIR)auto
+
+modules :
+		git clone $(FETCH_MODULES)
 
 FORCE:
 
