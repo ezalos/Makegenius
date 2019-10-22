@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2019/10/22 06:07:57 by ldevelle         ###   ########.fr        #
+#    Updated: 2019/10/22 06:37:45 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,8 +30,6 @@ CFLAGS	= -Wall -Wextra -Werror
 
 login 		=	ldevelle
 
-MAIN_FOLD 	=	$(shell find srcs -maxdepth 1 -type d | grep '/' | cut -d '/' -f 2)
-
 LIB_DIR		=	./libft
 LIB			=	$(LIB_DIR)/libft.a
 
@@ -49,6 +47,7 @@ DIR_OBJ 	=	./objs/
 ##						##
 ##########################
 
+MAIN_FOLD 	=	$(shell find srcs -maxdepth 1 -type d | grep '/' | cut -d '/' -f 2)
 MASTER		= 	srcs/
 AUTO_HEAD	=	$(MAIN_FOLD:%=auto/auto_%.h)
 
@@ -192,13 +191,13 @@ endef
 ##########################
 
 all :		$(NAME) auteur $(DIR_OBJ)
-			# @make -j $(NAME)
+			@make -j $(NAME)
 
 $(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)
-	$(CC) $(CFLAGS) -o $(NAME) -Llibft -lft -I./$(HEAD_DIR) $(OBJS) main.c
+	@$(call run_and_test, $(CC) $(CFLAGS) -o $(NAME) $(LIB) -I./$(HEAD_DIR) $(OBJS))
 
 $(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
-	$(CC) $(CFLAGS) -I$(HEAD_DIR) -Llibft -lft -o $@ -c $<
+	@$(call run_and_test, $(CC) $(CFLAGS) -I$(HEAD_DIR) -o $@ -c $<)
 
 $(LIB): FORCE
 		@$(MAKE) -C $(LIB_DIR)
