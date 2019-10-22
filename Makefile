@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2019/10/22 07:21:03 by ldevelle         ###   ########.fr        #
+#    Updated: 2019/10/22 07:29:54 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -240,17 +240,15 @@ t	:	all
 		$(CC) $(CFLAGS) -I$(HEAD_DIR) $(NAME) main.c -o $(TESTEUR)
 		$(VALGRIND) ./$(TESTEUR) "$(ARG)"
 
-# unit_test :
+unit_test :
 
-# big :
-# n ?= 10
-# all:
-# n=$(n); \
-# while [ $${n} -gt 0 ] ; do \
-#     echo $$n ; \
-#     n=`expr $$n - 1`; \
-# done; \
-# true
+big :
+n ?= 10
+n=$(n); \
+while [ $${n} -gt 0 ] ; do \
+    $(MAKE) unit_test \
+done; \
+true
 
 # last :	all
 # 		@./$(NAME) $(shell cat tests/last)
