@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2019/10/22 05:11:55 by ldevelle         ###   ########.fr        #
+#    Updated: 2019/10/22 06:05:23 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ HEAD_DIR 	= 	./includes/
 HEADERS		=	$(AUTO_HEAD)\
 				head.h
 
-HEAD_PATH	=	$(HEAD_DIR)/$(HEAD)
+# HEAD_PATH	=	$(HEAD_DIR)/$(HEAD)
 
 DIR_OBJ 	=	./objs/
 
@@ -191,14 +191,17 @@ endef
 ##						##
 ##########################
 
-all :		auteur $(DIR_OBJ)
-			@make -j $(NAME)
+all :		$(NAME) auteur $(DIR_OBJ)
+			# @make -j $(NAME)
 
-$(NAME):	$(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(LIB) -I./$(HEAD_DIR) $(OBJS) main.c
+$(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)
+	$(CC) $(CFLAGS) -o $(NAME) -Llibft -lft -I./$(HEAD_DIR) $(OBJS) main.c
 
 $(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
-	$(CC) $(CFLAGS) -I$(HEAD_DIR) $(LIB) -o $@ -c $<
+	$(CC) $(CFLAGS) -I$(HEAD_DIR) -Llibft -lft -o $@ -c $<
+
+$(LIB): FORCE
+		@$(MAKE) -C $(LIB_DIR)
 
 clean :
 	@rm -f $(OBJS)
@@ -249,6 +252,9 @@ t	:	all
 # @$(CC) $(CFLAGS) ./srcs/show_stats.c $(LIB) -o stats
 # @./stats $(nb)
 
+DIR_PREP = $(shell find $(MASTER) -type d -exec echo {} \; | sed 's~$(MASTER)~$(DIR_OBJ)~g')
+# GIT_PREP = $(shell find $(MASTER) -type d -exec echo {} \; | sed 's~$(MASTER)~$(DIR_OBJ)~g' | sed 's~$~\.gitkeep$~g')
+
 git :
 		@git add -A
 		@git status
@@ -266,10 +272,8 @@ srcs :	object_ready
 
 object_ready :	$(DIR_OBJ)
 		@rm -rf $(DIR_OBJ)/*
-		@find $(MASTER) -type d -exec mkdir objs/{} \;
-		@find $(MASTER) -type d -exec touch objs/{}/.gitkeep \;
-		@mv -f $(DIR_OBJ)$(MASTER)* ./$(DIR_OBJ)
-		@rm -rf $(DIR_OBJ)$(MASTER)
+		@mkdir -p $(DIR_PREP)
+		@find $(DIR_OBJ) -type d -exec touch {}/.gitkeep \;
 		@echo "\$(YELLOW)objects paths\$(END)\\t\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
 head :	auto_dir

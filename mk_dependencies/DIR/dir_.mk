@@ -1,0 +1,36 @@
+DIR += 	srcs/visual \
+	srcs/tools \
+	srcs/solve \
+	srcs/show \
+	srcs/print \
+	srcs/path \
+	srcs/new \
+	srcs/new \
+	srcs/main \
+	srcs/louis \
+	srcs/louis \
+	srcs/louis \
+	srcs/louis \
+	srcs/louis \
+	srcs/louis \
+	srcs/louis \
+	srcs/link \
+	srcs/init \
+	srcs/init \
+	srcs/init \
+	srcs/init \
+	srcs/init \
+	srcs/init \
+	srcs/hashtable \
+	srcs/hash \
+	srcs/graph \
+	srcs/get \
+	srcs/display \
+	srcs/display \
+	srcs/data \
+	srcs/creat \
+	srcs/buffer \
+	srcs/ants \
+	srcs/algo \
+	srcs/algo \
+	srcs/algo 

@@ -6,14 +6,14 @@
 /*   By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 11:15:02 by ldevelle          #+#    #+#             */
-/*   Updated: 2019/10/22 04:09:46 by ldevelle         ###   ########.fr       */
+/*   Updated: 2019/10/22 05:24:02 by ldevelle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HEAD_H
 # define HEAD_H
 
-# include "./libft.h"
+# include "./../libft/includes/libft.h"
 # include "auto.h"
 
 #endif
