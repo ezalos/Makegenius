@@ -6,11 +6,11 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2019/10/23 01:35:16 by ezalos           ###   ########.fr        #
+#    Updated: 2020/01/15 12:33:05 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME 	= ldevelle
+NAME 	= quine
 TESTEUR = test
 
 CC 		= gcc
@@ -56,11 +56,6 @@ AUTO_HEAD	=	$(MAIN_FOLD:%=auto/auto_%.h)
 
 HEAD		=	$(HEADERS:%=$(HEAD_DIR)%)
 
-update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos.sh % $(MASTER);)
-update_head	+=	sh scripts/get_protos.sh '' $(MASTER) '' '-d 1';
-update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs.sh % $(MASTER);)
-update_dep	+=	sh scripts/get_mk_srcs.sh '' $(MASTER) '' '-d 1';
-
 mk			=	./mk_dependencies
 
 mk_d		= 	$(mk)/DIR/
@@ -103,8 +98,10 @@ BLUE		= \e[34m
 MAGENTA		= \e[35m
 CYAN		= \e[36m
 END     	= \e[0m
-update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos.sh % $(MASTER);)
-update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs.sh % $(MASTER);)
+update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos_linux.sh % $(MASTER);)
+update_head	+=	sh scripts/get_protos_linux.sh '' $(MASTER) '' '-depth 1';
+update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs_linux.sh % $(MASTER);)
+update_dep	+=	sh scripts/get_mk_srcs_linux.sh '' $(MASTER) '' '-depth 1';
 else
 RED     	= \x1b[31m
 GREEN   	= \x1b[32m
@@ -113,6 +110,10 @@ BLUE		= \x1b[34m
 MAGENTA		= \x1b[35m
 CYAN		= \x1b[36m
 END     	= \x1b[0m
+update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos.sh % $(MASTER);)
+update_head	+=	sh scripts/get_protos.sh '' $(MASTER) '' '-d 1';
+update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs.sh % $(MASTER);)
+update_dep	+=	sh scripts/get_mk_srcs.sh '' $(MASTER) '' '-d 1';
 endif
 
 COM_COLOR   = $(BLUE)
@@ -200,7 +201,7 @@ $(NAME):	$(OBJS) $(HEAD_DIR)
 	@$(call run_and_test, $(AR) $(NAME) $(OBJS))
 else
 $(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)
-	@$(call run_and_test, $(CC) $(CFLAGS) -o $(NAME) $(LIB) -I./$(HEAD_DIR) $(OBJS))
+	@$(call run_and_test, $(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIB) -I./$(HEAD_DIR))
 endif
 
 $(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
@@ -218,6 +219,11 @@ fclean : clean
 	@echo "\$(YELLOW)$(NAME) \$(END)\\thas been \$(GREEN)\\t\\t\\t  $@\$(END)"
 
 re : fclean all
+
+rere :
+	@$(MAKE) re -C $(LIB_DIR)
+	@$(MAKE) re
+
 
 ##############################################################################
 ##############################################################################
