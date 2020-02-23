@@ -6,11 +6,11 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/01/15 12:33:05 by ezalos           ###   ########.fr        #
+#    Updated: 2020/02/23 20:15:34 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME 	= quine
+NAME 	= project
 TESTEUR = test
 
 CC 		= gcc
@@ -33,11 +33,13 @@ CFLAGS	= -Wall -Wextra -Werror
 login 		=	ldevelle
 
 LIB_DIR		=	./libft
-LIB			=	$(LIB_DIR)/libft.a
+LIB			=	$(LIB_DIR)/libft.a -lm
 
 HEAD_DIR 	= 	./includes/
 HEADERS		=	$(AUTO_HEAD)\
 				head.h
+
+HEADERS_DIRECTORIES = -I./$(HEAD_DIR) -I./$(LIB_DIR)/includes
 
 # HEAD_PATH	=	$(HEAD_DIR)/$(HEAD)
 
@@ -83,6 +85,7 @@ OBJ 	= $(PAT:%.c=%.o)
 OBJS	= $(PAT:$(MASTER)%.c=$(DIR_OBJ)%.o)
 
 ARG 	?= ldevelle
+MSG		?= "Automated commit message!"
 
 ##########################
 ##						##
@@ -201,11 +204,11 @@ $(NAME):	$(OBJS) $(HEAD_DIR)
 	@$(call run_and_test, $(AR) $(NAME) $(OBJS))
 else
 $(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)
-	@$(call run_and_test, $(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIB) -I./$(HEAD_DIR))
+	@$(call run_and_test, $(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIB) $(HEADERS_DIRECTORIES))
 endif
 
 $(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
-	@$(call run_and_test, $(CC) $(CFLAGS) -I$(HEAD_DIR) -o $@ -c $<)
+	@$(call run_and_test, $(CC) $(CFLAGS) $(HEADERS_DIRECTORIES) -o $@ -c $<)
 
 $(LIB): FORCE
 		@$(MAKE) -C $(LIB_DIR)
@@ -215,7 +218,7 @@ clean :
 	@echo "\$(YELLOW)$(NAME) objs \$(END)\\thas been \$(GREEN)\\t\\t\\t  $@\$(END)"
 
 fclean : clean
-	@rm -f $(NAME)
+	@rm -rf $(NAME) $(DIR_OBJ)
 	@echo "\$(YELLOW)$(NAME) \$(END)\\thas been \$(GREEN)\\t\\t\\t  $@\$(END)"
 
 re : fclean all
@@ -235,7 +238,7 @@ rere :
 ##############################################################################
 ##############################################################################
 
-auteur :
+auteur : Makefile
 		@echo $(login) > auteur
 
 $(DIR_OBJ) :
@@ -245,12 +248,15 @@ t	:	all
 		$(CC) $(CFLAGS) -I$(HEAD_DIR) $(NAME) main.c -o $(TESTEUR)
 		$(VALGRIND) ./$(TESTEUR) "$(ARG)"
 
+run	:	all
+		$(VALGRIND) ./$(NAME) "$(ARG)"
+
 unit_test :
 
 big :
-n ?= 10
-n=$(n); \
-while [ $${n} -gt 0 ] ; do \
+n_times ?= 100
+n_times=$(n_times); \
+while [ $${n_times} -gt 0 ] ; do \
     $(MAKE) unit_test \
 done; \
 true
@@ -264,17 +270,28 @@ true
 
 DIR_PREP = $(shell find $(MASTER) -type d -exec echo {} \; | sed 's~$(MASTER)~$(DIR_OBJ)~g')
 # GIT_PREP = $(shell find $(MASTER) -type d -exec echo {} \; | sed 's~$(MASTER)~$(DIR_OBJ)~g' | sed 's~$~\.gitkeep$~g')
+GIT_VALID=false
+
+init_git:
+		@echo "# $(NAME)" > README.md
+		@git init
+		@git add -A
+		@git commit -m "first commit"
+		@git remote add origin https://github.com/ezalos/$(NAME).git
+		@git push -u origin master
+
 
 git :
 		@git add -A
 		@git status
-		@git commit -am "$(COMMIT_MESSAGE)"
+		@$(GIT_VALID) || (echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ])
+		@git commit -m "$(MSG)"
 		@git push
 
-file : 	srcs head
+file : 	sources prototypes
 		@$(MAKE)
 
-srcs :	object_ready
+sources :	object_ready
 		@rm -rf $(mk_d) $(mk_s) $(mk_p)
 		@mkdir $(mk_d) $(mk_s) $(mk_p)
 		@$(update_dep)
@@ -286,12 +303,12 @@ object_ready :	$(DIR_OBJ)
 		@find $(DIR_OBJ) -type d -exec touch {}/.gitkeep \;
 		@echo "\$(YELLOW)objects paths\$(END)\\t\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
-head :	auto_dir
+prototypes :	auto_dir
 		@$(update_head)
 		@sh scripts/get_master_head.sh $(HEAD_DIR)
 		@echo "\$(YELLOW)automatic headers\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
-auto_dir :	head
+auto_dir :	prototypes
 		@mkdir -p $(HEAD_DIR)auto
 
 modules :

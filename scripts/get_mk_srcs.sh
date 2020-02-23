@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/22 19:03:06 by ldevelle          #+#    #+#              #
-#    Updated: 2019/10/22 02:17:57 by ldevelle         ###   ########.fr        #
+#    Updated: 2020/02/23 17:34:16 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,11 @@
 # $2 is fully optional
 
 path=mk_dependencies/
-prefx=PAT/pat_
+prefix=PAT/pat_
 spre=SRC/src_
 ppre=DIR/dir_
 extension=.mk
-name=$path$prefx$1$extension
+name=$path$prefix$1$extension
 name2=$path$ppre$1$extension
 name1=$path$spre$1$extension
 
