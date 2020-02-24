@@ -28,7 +28,7 @@ login 		=	ldevelle
 github_username = ezalos
 github_project = $(NAME)
 #Do you wish to have to confirm your push in 'make git' ?
-GIT_VALID=true
+GIT_VALID=false
 
 LIB_DIR		=	./libft
 LIB			=	$(LIB_DIR)/libft.a -lm
