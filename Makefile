@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/02/24 09:08:22 by ezalos           ###   ########.fr        #
+#    Updated: 2020/02/26 21:51:24 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -253,7 +253,6 @@ true
 
 # last :	all
 # 		@./$(NAME) $(shell cat tests/last)
-
 
 # @$(CC) $(CFLAGS) ./srcs/show_stats.c $(LIB) -o stats
 # @./stats $(nb)

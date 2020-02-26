@@ -11,34 +11,54 @@
 # **************************************************************************** #
 
 #It will be the name of your executable
-NAME 	= project
+NAME 					=	project
 
-TESTEUR = test
+TESTEUR					=	test
 
 #Change to 'y' if this project needs to be a library
-LIB_PRJCT = n
+LIB_PRJCT 				=	n
 
 #These are your basic compilation flags
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS					=	-Wall -Wextra -Werror
 
 #USERNAME used for the auteur file
-login 		=	ldevelle
+login 					=	ldevelle
 
+DIR_OBJ 				=	./objs/
+
+##########################
+##						##
+##		 GITHUB			##
+##						##
+##########################
 #Allow to automatically make the first push to the project
-github_username = ezalos
-github_project = $(NAME)
+github_username			=	ezalos
+github_project			=	$(NAME)
 #Do you wish to have to confirm your push in 'make git' ?
-GIT_VALID=false
+GIT_VALID				=	false
 
-LIB_DIR		=	./libft
-LIB			=	$(LIB_DIR)/libft.a -lm
 
-HEAD_DIR 	= 	./includes/
-HEADERS		=	$(AUTO_HEAD)\
-				head.h
+##########################
+##						##
+##		LIBRAIRIES		##
+##						##
+##########################
 
-HEADERS_DIRECTORIES = -I./$(HEAD_DIR) -I./$(LIB_DIR)/includes
+LIB_DIR					=	./libft
+LIB						=	$(LIB_DIR)/libft.a -lm
+
+
+##########################
+##						##
+##		INCLUDES		##
+##						##
+##########################
+
+HEAD_DIR 				= 	./includes/
+HEADERS					=	$(AUTO_HEAD)\
+							head.h
+
+HEADERS_DIRECTORIES 	=	-I./$(HEAD_DIR)\
+							-I./$(LIB_DIR)/includes
 
 # HEAD_PATH	=	$(HEAD_DIR)/$(HEAD)
-
-DIR_OBJ 	=	./objs/
