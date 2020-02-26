@@ -20,8 +20,8 @@ Originally designed for 42 students, it's correction proof !
 
 * ```make file```  Will call both of these rules
   * ```make sources```
-   * Generate all the Makefile sources needed to compile what's inside your srcs/ folder
-   * Will allow compilation relink for whatever is your folder architecture  in srcs/
+    * Generate all the Makefile sources needed to compile what's inside your srcs/ folder
+    * Will allow compilation relink for whatever is your folder architecture  in srcs/
   * ```make prototypes```
    * Each function declared inside your srcs/ folder will have her prototype created and added in includes/auto/auto_*.h
 * ```make run```
