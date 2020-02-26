@@ -24,10 +24,12 @@ Originally designed for 42 students, it's correction proof !
     * Will allow compilation relink for whatever is your folder architecture  in srcs/
   * ```make prototypes```
     * Each function declared inside your srcs/ folder will have her prototype created and added in includes/auto/auto_*.h
+    
 * ```make run```
   * During development of your project, it will make sure to recompile what's
  needed before launching your program !
   * ```make run ARG="your argument"``` Allow you set up your first argument if you need it.
+  
 * ```Compilation Flags```
  During compilation you can specify different flags:
   * ```make``` will compile with **-Wall -Werror -Wextra**
@@ -37,10 +39,12 @@ Originally designed for 42 students, it's correction proof !
     * when used with ```make run```  
     It will launch the program inside **Valgrind** to check for leaks !
   * ```make f=h``` will compile with as much flags as possible !
+  
 * ```make git MSG="your commit message"```  
  Will ```git add``` all your modifications  
  After showing you the ```git status``` for you to confirm  
  this command will ```git push``` all your changes for you !
+ 
 * ```make big n_times=1000```  
  Will launch ```make unit_test``` ```n_times```  
  Pretty useful for testing programs which highly relies on inputs like _push_swap_, _lem-in_ or _Corewar_
