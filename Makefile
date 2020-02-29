@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/02/29 18:33:18 by ldevelle         ###   ########.fr        #
+#    Updated: 2020/02/29 18:52:02 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ $(shell mkdir -p $(mk) $(mk_p))
 $(shell touch $(include_dep))
 FETCH_MODULES	=	$(shell grep "url" .gitmodules | cut -d '=' -f 2)
 UNAME			:=	$(shell uname)
+GIT_MODULES 	= $(FETCH_MODULES:%=git clone % ; )
 
 include $(include_dep)
 
@@ -175,7 +176,7 @@ endef
 ##						##
 ##########################
 
-all :		$(NAME) auteur $(DIR_OBJ)
+all :	$(modules) $(NAME) auteur $(DIR_OBJ)
 
 ifeq ($(LIB_PRJCT), y)
 $(NAME):	$(OBJS) $(HEAD_DIR)
@@ -292,7 +293,7 @@ auto_dir :
 		@mkdir -p $(HEAD_DIR)auto
 
 modules :
-		git clone $(FETCH_MODULES)
+		$(GIT_MODULES)
 
 FORCE:
 
