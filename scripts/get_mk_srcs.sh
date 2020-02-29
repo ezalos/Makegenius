@@ -6,9 +6,10 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/22 19:03:06 by ldevelle          #+#    #+#              #
-#    Updated: 2020/02/23 17:34:16 by ezalos           ###   ########.fr        #
+#    Updated: 2020/02/29 18:21:39 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 #! /bin/bash
 
@@ -20,17 +21,12 @@
 # $2 is fully optional
 
 path=mk_dependencies/
-prefix=PAT/pat_
-spre=SRC/src_
-ppre=DIR/dir_
+prefx=PAT/pat_
 extension=.mk
-name=$path$prefix$1$extension
-name2=$path$ppre$1$extension
-name1=$path$spre$1$extension
+name=$path$prefx$1$extension
 
-rm -rf $name $name1 $name2
-touch $name $name1 $name2
-
+rm -rf $name
+touch $name
 
 # Creation .mk with full path to the file
 find $3$2$1 $4 -type f -exec ls -lrt -d -1 {} \+ | sed "s~//~/~g" | grep '\.c' >> $name
@@ -39,22 +35,5 @@ sed -i '' 's/$/ \\/' $name
 sed -i '' 's/^/	/' $name
 sed -i '' "1s/^/PAT += /" $name
 sed -i '' '1h;1!H;$!d;g;s/\(.*\)\\/\1/' $name
-
-# Creation .mk with name of the file
-cat $name | rev | cut -d '/' -f 1 | rev | cut -d ' ' -f 1 >> $name1
-
-sed -i '' 's/$/ \\/' $name1
-sed -i '' 's/^/	/' $name1
-sed -i '' "1s/^/SRC += /" $name1
-sed -i '' '1h;1!H;$!d;g;s/\(.*\)\\/\1/' $name1
-
-# Creation .mk with path without file at the end
-cat $name | cut -d$'\t' -f 2 | cut -d '.' -f 1 | cut -d '_' -f 1 | sed "s~ft~~g" >> $name2
-
-sed -i '' 's/$/ \\/' $name2
-sed -i '' 's/^/	/' $name2
-sed -i '' "1s/^/DIR += /" $name2
-sed -i '' '1h;1!H;$!d;g;s/\(.*\)\\/\1/' $name2
-
 
 # echo "$1\t\tconverted to Makefile source"

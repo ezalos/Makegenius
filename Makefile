@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/02/26 21:51:24 by ezalos           ###   ########.fr        #
+#    Updated: 2020/02/29 18:33:18 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,45 +23,33 @@ AR		= ar -rcs
 
 MAIN_FOLD 	=	$(shell find srcs -maxdepth 1 -type d | grep '/' | cut -d '/' -f 2)
 MASTER		= 	srcs/
+
 $(shell mkdir -p $(MASTER))
+
 AUTO_HEAD	=	$(MAIN_FOLD:%=auto/auto_%.h)
 
 HEAD		=	$(HEADERS:%=$(HEAD_DIR)%)
 
 mk			=	./mk_dependencies
-
-# mk_d		= 	$(mk)/DIR/
-# mk_s		= 	$(mk)/SRC/
 mk_p		= 	$(mk)/PAT/
-
-# include_dir	=	$(MAIN_FOLD:%=$(mk_d)dir_%.mk)
-# include_dir	+=	$(mk_d)dir_.mk
 include_pat	=	$(MAIN_FOLD:%=$(mk_p)pat_%.mk)
 include_pat	+=	$(mk_p)pat_.mk
-# include_src	=	$(MAIN_FOLD:%=$(mk_s)src_%.mk)
-# include_src	+=	$(mk_s)src_.mk
-
-# include_dep	=	$(include_src) $(include_pat) $(include_dir)
 include_dep	=	$(include_pat)
 
-# SRC =
 PAT =
-# DIR =
 
-# $(shell mkdir -p $(mk) $(mk_d) $(mk_s) $(mk_p))
 $(shell mkdir -p $(mk) $(mk_p))
 $(shell touch $(include_dep))
+FETCH_MODULES	=	$(shell grep "url" .gitmodules | cut -d '=' -f 2)
+UNAME			:=	$(shell uname)
+
 include $(include_dep)
-UNAME := $(shell uname)
-
-
 
 OBJ 	= $(PAT:%.c=%.o)
 OBJS	= $(PAT:$(MASTER)%.c=$(DIR_OBJ)%.o)
 
 ARG 	?= ldevelle
 MSG		?= "Automated commit message!"
-FETCH_MODULES	= $(shell grep "url" .gitmodules | cut -d '=' -f 2)
 
 ##########################
 ##						##
@@ -71,12 +59,12 @@ FETCH_MODULES	= $(shell grep "url" .gitmodules | cut -d '=' -f 2)
 
 ifeq ($(UNAME),Linux)
 update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos_linux.sh % $(MASTER);)
-update_head	+=	sh scripts/get_protos_linux.sh '' $(MASTER) '' '-depth 1';
+update_head	+=	sh scripts/get_protos_linux.sh '' $(MASTER) '' $(NAME);
 update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs_linux.sh % $(MASTER);)
 update_dep	+=	sh scripts/get_mk_srcs_linux.sh '' $(MASTER) '' '-depth 1';
 else
 update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos.sh % $(MASTER);)
-update_head	+=	sh scripts/get_protos.sh '' $(MASTER) '' '-d 1';
+update_head	+=	sh scripts/get_protos.sh '' $(MASTER) '' $(NAME);
 update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs.sh % $(MASTER);)
 update_dep	+=	sh scripts/get_mk_srcs.sh '' $(MASTER) '' '-d 1';
 endif
@@ -282,24 +270,25 @@ file : 	sources prototypes
 		@$(MAKE)
 
 sources :	object_ready
-		@rm -rf $(mk_d) $(mk_s) $(mk_p)
-		@mkdir $(mk_d) $(mk_s) $(mk_p)
-		@$(update_dep)
+		rm -rf $(mk_p)
+		mkdir -p $(mk_p)
+		echo $(update_dep)
+		$(update_dep)
 		@echo "\$(YELLOW)automatic sources\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
 DIR_PREP = $(shell find $(MASTER) -type d -exec echo {} \; | sed 's~$(MASTER)~$(DIR_OBJ)~g')
 object_ready :	$(DIR_OBJ)
-		@rm -rf $(DIR_OBJ)/*
-		@mkdir -p $(DIR_PREP)
-		@find $(DIR_OBJ) -type d -exec touch {}/.gitkeep \;
+		rm -rf $(DIR_OBJ)/*
+		mkdir -p $(DIR_PREP)
+		find $(DIR_OBJ) -type d -exec touch {}/.gitkeep \;
 		@echo "\$(YELLOW)objects paths\$(END)\\t\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
 prototypes :	auto_dir
 		@$(update_head)
-		@sh scripts/get_master_head.sh $(HEAD_DIR)
+		@sh scripts/get_master_head.sh $(HEAD_DIR) $(NAME)
 		@echo "\$(YELLOW)automatic headers\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
-auto_dir :	prototypes
+auto_dir :
 		@mkdir -p $(HEAD_DIR)auto
 
 modules :
