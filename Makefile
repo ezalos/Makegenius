@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/02/29 18:52:02 by ldevelle         ###   ########.fr        #
+#    Updated: 2020/02/29 18:59:10 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,9 +60,9 @@ MSG		?= "Automated commit message!"
 
 ifeq ($(UNAME),Linux)
 update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos_linux.sh % $(MASTER);)
-update_head	+=	sh scripts/get_protos_linux.sh '' $(MASTER) '' $(NAME);
-update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs_linux.sh % $(MASTER);)
-update_dep	+=	sh scripts/get_mk_srcs_linux.sh '' $(MASTER) '' '-depth 1';
+update_head	+=	sh scripts/get_protos.sh '' $(MASTER) '' $(NAME);
+update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs.sh % $(MASTER);)
+update_dep	+=	sh scripts/get_mk_srcs.sh '' $(MASTER) '' '-depth 1';
 else
 update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos.sh % $(MASTER);)
 update_head	+=	sh scripts/get_protos.sh '' $(MASTER) '' $(NAME);
@@ -202,26 +202,24 @@ fclean : clean
 
 re : fclean all
 
+
+
 rere :
 	@$(MAKE) re -C $(LIB_DIR)
 	@$(MAKE) re
 
-
-##############################################################################
-##############################################################################
-##																			##
-##									-----									##
-##									BONUS									##
-##									-----									##
-##																			##
-##############################################################################
-##############################################################################
 
 auteur : Makefile
 		@echo $(login) > auteur
 
 $(DIR_OBJ) :
 		@mkdir -p $(DIR_OBJ)
+
+##########################
+##						##
+##		 RUN IT			##
+##						##
+##########################
 
 t	:	all
 		$(CC) $(CFLAGS) -I$(HEAD_DIR) $(NAME) main.c -o $(TESTEUR)
@@ -240,20 +238,19 @@ while [ $${n_times} -gt 0 ] ; do \
 done; \
 true
 
-# last :	all
-# 		@./$(NAME) $(shell cat tests/last)
-
-# @$(CC) $(CFLAGS) ./srcs/show_stats.c $(LIB) -o stats
-# @./stats $(nb)
-
-# GIT_PREP = $(shell find $(MASTER) -type d -exec echo {} \; | sed 's~$(MASTER)~$(DIR_OBJ)~g' | sed 's~$~\.gitkeep$~g')
+##########################
+##						##
+##		  GIT			##
+##						##
+##########################
 
 init_git:
+		@rm -rf .git
 		@echo "# $(NAME)" > README.md
 		@git init
 		@git add -A
 		@git commit -m "first commit"
-		@git remote add origin https://github.com/$(github_username)/$(github_project).git
+		@git remote add origin $(GIT_REPO)
 		@git push -u origin master
 
 
@@ -266,6 +263,15 @@ git :
 		@$(GIT_VALID) || (echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ])
 		@git commit -m "$(COMMIT_MESSAGE)"
 		@git push
+
+modules :
+		$(GIT_MODULES)
+
+##########################
+##						##
+##	    AUTOMATE		##
+##						##
+##########################
 
 file : 	sources prototypes
 		@$(MAKE)
@@ -292,8 +298,6 @@ prototypes :	auto_dir
 auto_dir :
 		@mkdir -p $(HEAD_DIR)auto
 
-modules :
-		$(GIT_MODULES)
 
 FORCE:
 

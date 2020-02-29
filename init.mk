@@ -34,6 +34,7 @@ DIR_OBJ 				=	./objs/
 #Allow to automatically make the first push to the project
 github_username			=	ezalos
 github_project			=	$(NAME)
+GIT_REPO				=	https://github.com/$(github_username)/$(github_project).git
 #Do you wish to have to confirm your push in 'make git' ?
 GIT_VALID				=	false
 
