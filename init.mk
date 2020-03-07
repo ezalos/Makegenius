@@ -57,8 +57,7 @@ LIB						=	$(LIB_DIR)/libft.a -lm
 
 HEAD_DIR 				= 	./includes/
 HEADERS					=	$(AUTO_HEAD)\
-							head.h\
-							sudo.h
+							head.h
 
 HEADERS_DIRECTORIES 	=	-I./$(HEAD_DIR)\
 							-I./$(LIB_DIR)/includes

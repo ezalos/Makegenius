@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/02/29 19:03:47 by ldevelle         ###   ########.fr        #
+#    Updated: 2020/03/07 16:30:38 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -180,40 +180,42 @@ all :	$(modules) $(NAME) auteur $(DIR_OBJ)
 
 ifeq ($(LIB_PRJCT), y)
 $(NAME):	$(OBJS) $(HEAD_DIR)
-	@$(call run_and_test, $(AR) $(NAME) $(OBJS))
+	$(call run_and_test, $(AR) $(NAME) $(OBJS))
 else
 $(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)
-	@$(call run_and_test, $(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIB) $(HEADERS_DIRECTORIES))
+	$(call run_and_test, $(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIB) $(HEADERS_DIRECTORIES))
 endif
 
 $(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
-	@$(call run_and_test, $(CC) $(CFLAGS) $(HEADERS_DIRECTORIES) -o $@ -c $<)
+	mkdir -p $(DIR_OBJ)
+	$(call run_and_test, $(CC) $(CFLAGS) $(HEADERS_DIRECTORIES) -o $@ -c $<)
 
 $(LIB): FORCE
-		@$(MAKE) -C $(LIB_DIR)
+		$(MAKE) -C $(LIB_DIR)
 
 clean :
-	@rm -f $(OBJS)
-	@echo "\$(YELLOW)$(NAME) objs \$(END)\\thas been \$(GREEN)\\t\\t\\t  $@\$(END)"
+	rm -f $(OBJS)
+	echo "\$(YELLOW)$(NAME) objs \$(END)\\thas been \$(GREEN)\\t\\t\\t  $@\$(END)"
 
 fclean : clean
-	@rm -rf $(NAME) $(DIR_OBJ)
-	@echo "\$(YELLOW)$(NAME) \$(END)\\thas been \$(GREEN)\\t\\t\\t  $@\$(END)"
+	rm -rf $(NAME) $(DIR_OBJ)
+	echo "\$(YELLOW)$(NAME) \$(END)\\thas been \$(GREEN)\\t\\t\\t  $@\$(END)"
 
-re : fclean all
+re : fclean
+	$(MAKE) all
 
 
 
 rere :
-	@$(MAKE) re -C $(LIB_DIR)
-	@$(MAKE) re
+	$(MAKE) re -C $(LIB_DIR)
+	$(MAKE) re
 
 
 auteur : Makefile
-		@echo $(login) > auteur
+		echo $(login) > auteur
 
 $(DIR_OBJ) :
-		@mkdir -p $(DIR_OBJ)
+		mkdir -p $(DIR_OBJ)
 
 ##########################
 ##						##
@@ -245,27 +247,27 @@ true
 ##########################
 
 init:	init_git
-		@echo Hope you completed init.mk
+		echo Hope you completed init.mk
 
 init_git:
-		@rm -rf .git
-		@echo "# $(NAME)" > README.md
-		@git init
-		@git add -A
-		@git commit -m "first commit"
-		@git remote add origin $(GIT_REPO)
-		@git push -u origin master
+		rm -rf .git
+		echo "# $(NAME)" > README.md
+		git init
+		git add -A
+		git commit -m "first commit"
+		git remote add origin $(GIT_REPO)
+		git push -u origin master
 
 
 REQUEST 		= 'read -p "Enter a commit message:	" pwd && echo $$pwd'
 COMMIT_MESSAGE ?= $(shell bash -c $(REQUEST))
-# @$(GIT_VALID) || (echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ])
+# $(GIT_VALID) || (echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ])
 git :
-		@git add -A
-		@git status
-		@$(GIT_VALID) || (echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ])
-		@git commit -m "$(COMMIT_MESSAGE)"
-		@git push
+		git add -A
+		git status
+		$(GIT_VALID) || (echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ])
+		git commit -m "$(COMMIT_MESSAGE)"
+		git push
 
 modules :
 		$(GIT_MODULES)
@@ -277,32 +279,31 @@ modules :
 ##########################
 
 file : 	sources prototypes
-		@$(MAKE)
+		$(MAKE)
 
 sources :	object_ready
 		rm -rf $(mk_p)
 		mkdir -p $(mk_p)
 		echo $(update_dep)
 		$(update_dep)
-		@echo "\$(YELLOW)automatic sources\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
+		echo "\$(YELLOW)automatic sources\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
 DIR_PREP = $(shell find $(MASTER) -type d -exec echo {} \; | sed 's~$(MASTER)~$(DIR_OBJ)~g')
 object_ready :	$(DIR_OBJ)
 		rm -rf $(DIR_OBJ)/*
 		mkdir -p $(DIR_PREP)
 		find $(DIR_OBJ) -type d -exec touch {}/.gitkeep \;
-		@echo "\$(YELLOW)objects paths\$(END)\\t\\thas been \$(GREEN)\\t\\t  created\$(END)"
+		echo "\$(YELLOW)objects paths\$(END)\\t\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
 prototypes :	auto_dir
-		@$(update_head)
-		@sh scripts/get_master_head.sh $(HEAD_DIR) $(NAME)
-		@echo "\$(YELLOW)automatic headers\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
+		$(update_head)
+		sh scripts/get_master_head.sh $(HEAD_DIR) $(NAME)
+		echo "\$(YELLOW)automatic headers\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
 auto_dir :
-		@mkdir -p $(HEAD_DIR)auto
+		mkdir -p $(HEAD_DIR)auto
 
 
-FORCE:
 
 ##########################
 ##						##
@@ -310,4 +311,6 @@ FORCE:
 ##						##
 ##########################
 
+FORCE:
 .PHONY : all clean fclean re git file object_ready check FORCE
+.SILENT:
