@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/07 16:30:38 by ldevelle         ###   ########.fr        #
+#    Updated: 2020/03/07 18:19:30 by ldevelle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -246,8 +246,9 @@ true
 ##						##
 ##########################
 
-init:	init_git
-		echo Hope you completed init.mk
+init:
+		echo -n "Have you completed init.mk ?" && read ans && [ $${ans:-N} = y ]
+		$(MAKE) init_git
 
 init_git:
 		rm -rf .git
@@ -303,11 +304,26 @@ prototypes :	auto_dir
 auto_dir :
 		mkdir -p $(HEAD_DIR)auto
 
+##########################
+##						##
+##		  SELF			##
+##						##
+##########################
 
+repository=https://github.com/ezalos/Makegenius.git
+temp_folder=.tmp_makegenius_update/
+
+update :
+		rm -rf $(temp_folder)
+		git clone $(repository) $(temp_folder)
+		sh $(.tmp_makegenius_update)/scripts/update_makegenius.sh $(temp_folder) &
+
+rm_update_tmp_dir:
+		rm -rf $(temp_folder)
 
 ##########################
 ##						##
-##		 .PHONY			##
+##		 PARAMS			##
 ##						##
 ##########################
 
