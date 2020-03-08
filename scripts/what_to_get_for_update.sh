@@ -6,10 +6,11 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/07 17:43:06 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/07 18:16:19 by ldevelle         ###   ########.fr        #
+#    Updated: 2020/03/08 13:31:36 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #! /bin/bash
 
 files_to_copy=("scripts" "Makefile")
+echo wesh2

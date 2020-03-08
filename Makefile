@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/08 13:19:40 by ezalos           ###   ########.fr        #
+#    Updated: 2020/03/08 13:21:47 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -316,7 +316,7 @@ temp_folder=.tmp_makegenius_update/
 update :
 		rm -rf $(temp_folder)
 		git clone $(makegenius_repository) $(temp_folder)
-		sh $(.tmp_makegenius_update)/scripts/update_makegenius.sh $(temp_folder) &
+		sh "$(.tmp_makegenius_update)scripts/update_makegenius.sh" $(temp_folder) &
 
 rm_update_tmp_dir:
 		rm -rf $(temp_folder)
