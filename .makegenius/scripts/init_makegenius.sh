@@ -6,7 +6,7 @@
 #    By: ezalos <ezalos@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/08 19:55:41 by ezalos            #+#    #+#              #
-#    Updated: 2020/03/08 21:11:57 by ezalos           ###   ########.fr        #
+#    Updated: 2020/03/08 21:16:45 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -96,6 +96,7 @@ echo
 echo
 echo -n $RED
 echo "Setup is complete."
+echo "Do not hesitate to look and adjust all the available options in init.mk !"
 echo "Thank you for using Makegenius !"
 echo -n $END
 echo
