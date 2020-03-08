@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/07 17:26:31 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/08 13:43:00 by ezalos           ###   ########.fr        #
+#    Updated: 2020/03/08 13:50:54 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,15 +16,13 @@
 temp_folder=$1
 rm_old_files="./scripts/what_to_del_for_update.sh"
 source $rm_old_files
-echo new1
 for i in "${files_to_delete[@]}"
 do
 	rm -rf $i
 done
 
-update_sources=srcipts/what_to_get_for_update.sh
+update_sources="scripts/what_to_get_for_update.sh"
 source $temp_folder$update_sources
-echo new2
 for i in "${files_to_copy[@]}"
 do
 	cp -rf $temp_folder$i .

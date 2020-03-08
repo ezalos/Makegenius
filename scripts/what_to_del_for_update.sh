@@ -6,11 +6,10 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/07 17:43:13 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/08 13:32:50 by ezalos           ###   ########.fr        #
+#    Updated: 2020/03/08 13:50:58 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #! /bin/bash
 
 files_to_delete=("scripts" "Makefile")
-echo wesho1
