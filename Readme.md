@@ -48,7 +48,7 @@ Originally designed for 42 students, it's correction proof !
 * ```make big n_times=1000```  
  Will launch ```make unit_test``` ```n_times```  
  Pretty useful for testing programs which highly relies on inputs like _push_swap_, _lem-in_ or _Corewar_
-* ```make update```
+* ```make update```  
  Will update the Makegenius part of your project
 
 
