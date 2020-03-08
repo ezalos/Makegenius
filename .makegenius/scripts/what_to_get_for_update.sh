@@ -1,15 +1,15 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    what_to_del_for_update.sh                          :+:      :+:    :+:    #
+#    what_to_get_for_update.sh                          :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/03/07 17:43:13 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/08 13:50:58 by ezalos           ###   ########.fr        #
+#    Created: 2020/03/07 17:43:06 by ldevelle          #+#    #+#              #
+#    Updated: 2020/03/08 21:08:11 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #! /bin/bash
 
-files_to_delete=("scripts" "Makefile")
+files_to_copy=(".makegenius" "Makefile")

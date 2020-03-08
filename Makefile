@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/08 13:42:10 by ezalos           ###   ########.fr        #
+#    Updated: 2020/03/08 21:04:39 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ AUTO_HEAD	=	$(MAIN_FOLD:%=auto/auto_%.h)
 
 HEAD		=	$(HEADERS:%=$(HEAD_DIR)%)
 
-mk			=	./mk_dependencies
+mk			=	./.makegenius/mk_dependencies
 mk_p		= 	$(mk)/PAT/
 include_pat	=	$(MAIN_FOLD:%=$(mk_p)pat_%.mk)
 include_pat	+=	$(mk_p)pat_.mk
@@ -59,15 +59,15 @@ MSG		?= "Automated commit message!"
 ##########################
 
 ifeq ($(UNAME),Linux)
-update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos_linux.sh % $(MASTER);)
-update_head	+=	sh scripts/get_protos.sh '' $(MASTER) '' $(NAME);
-update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs.sh % $(MASTER);)
-update_dep	+=	sh scripts/get_mk_srcs.sh '' $(MASTER) '' '-depth 1';
+update_head	=	$(MAIN_FOLD:%=sh .makegenius/scripts/get_protos_linux.sh % $(MASTER);)
+update_head	+=	sh .makegenius/scripts/get_protos.sh '' $(MASTER) '' $(NAME);
+update_dep	=	$(MAIN_FOLD:%=sh .makegenius/scripts/get_mk_srcs.sh % $(MASTER);)
+update_dep	+=	sh .makegenius/scripts/get_mk_srcs.sh '' $(MASTER) '' '-depth 1';
 else
-update_head	=	$(MAIN_FOLD:%=sh scripts/get_protos.sh % $(MASTER);)
-update_head	+=	sh scripts/get_protos.sh '' $(MASTER) '' $(NAME);
-update_dep	=	$(MAIN_FOLD:%=sh scripts/get_mk_srcs.sh % $(MASTER);)
-update_dep	+=	sh scripts/get_mk_srcs.sh '' $(MASTER) '' '-d 1';
+update_head	=	$(MAIN_FOLD:%=sh .makegenius/scripts/get_protos.sh % $(MASTER);)
+update_head	+=	sh .makegenius/scripts/get_protos.sh '' $(MASTER) '' $(NAME);
+update_dep	=	$(MAIN_FOLD:%=sh .makegenius/scripts/get_mk_srcs.sh % $(MASTER);)
+update_dep	+=	sh .makegenius/scripts/get_mk_srcs.sh '' $(MASTER) '' '-d 1';
 endif
 
 ##########################
@@ -204,8 +204,6 @@ fclean : clean
 re : fclean
 	$(MAKE) all
 
-
-
 rere :
 	$(MAKE) re -C $(LIB_DIR)
 	$(MAKE) re
@@ -247,7 +245,8 @@ true
 ##########################
 
 init:
-		echo -n "Have you completed init.mk ?" && read ans && [ $${ans:-N} = y ]
+		sh ./.makegenius/scripts/init_makegenius.sh
+		echo -n "Do you wish to puh your project on github ?" && read ans && [ $${ans:-N} = y ]
 		$(MAKE) init_git
 
 init_git:
@@ -298,7 +297,7 @@ object_ready :	$(DIR_OBJ)
 
 prototypes :	auto_dir
 		$(update_head)
-		sh scripts/get_master_head.sh $(HEAD_DIR) $(NAME)
+		sh .makegenius/scripts/get_master_head.sh $(HEAD_DIR) $(NAME)
 		echo "\$(YELLOW)automatic headers\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
 auto_dir :
@@ -316,7 +315,7 @@ temp_folder=.tmp_makegenius_update/
 update :
 		rm -rf $(temp_folder)
 		git clone $(makegenius_repository) $(temp_folder)
-		bash "$(temp_folder)scripts/update_makegenius.sh" $(temp_folder) &
+		bash "$(temp_folder).makegenius/scripts/update_makegenius.sh" $(temp_folder) &
 
 rm_update_tmp_dir:
 		rm -rf $(temp_folder)
@@ -328,5 +327,7 @@ rm_update_tmp_dir:
 ##########################
 
 FORCE:
-.PHONY	: all clean fclean re git file object_ready check FORCE
+.PHONY	:	all clean fclean re git file object_ready check update\
+			rm_update_tmp_dir auto_dir prototypes sources modules\
+			rere auteur run unit_test big init init_git FORCE
 .SILENT	:

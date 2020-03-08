@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/22 19:03:06 by ldevelle          #+#    #+#              #
-#    Updated: 2020/02/29 18:21:39 by ldevelle         ###   ########.fr        #
+#    Updated: 2020/03/08 14:05:03 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@
 # $2 (../srcs/minishell/) will be the path (from where the .sh is executed)
 # $2 is fully optional
 
-path=mk_dependencies/
+path=.makegenius/mk_dependencies/
 prefx=PAT/pat_
 extension=.mk
 name=$path$prefx$1$extension

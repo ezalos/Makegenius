@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 #It will be the name of your executable
-NAME 					=	project
+NAME 					=	project_name
 
 TESTEUR					=	test
 
