@@ -6,7 +6,7 @@
 #    By: ezalos <ezalos@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/08 19:55:41 by ezalos            #+#    #+#              #
-#    Updated: 2020/03/08 21:06:42 by ezalos           ###   ########.fr        #
+#    Updated: 2020/03/08 21:11:57 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,8 +41,8 @@ ask_user()
 	echo -n $RED
 	echo "$1"
 	echo -n $CYAN
-	echo "		Here's a grep of the default value as well as the comment."
-	echo "		Press enter to keep default value"
+	echo "	Here's a grep of the default value as well as the comment."
+	echo "	Press enter to keep default value"
 	echo -n $END
 	show_context "$2" "$3"
 
