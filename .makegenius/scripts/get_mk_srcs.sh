@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/22 19:03:06 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/29 14:15:14 by ezalos           ###   ########.fr        #
+#    Updated: 2020/03/29 15:06:47 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ rm -rf $name
 touch $name
 
 # Creation .mk with full path to the file
-find $3$2$1 $4 -type f -exec ls -lrt -d -1 {} \+ | sed "s~//~/~g" | grep '\.c' >> $name
+find $3$2$1 -type f -exec ls -lrtA -d -1 {} \+ | sed "s~//~/~g" | grep -Eo "$2.+\.c" >> $name
 
 if [ "$(uname)" == "Darwin" ]; then
 	sed -i '' 's/$/ \\/' $name
