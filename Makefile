@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/08 21:04:39 by ezalos           ###   ########.fr        #
+#    Updated: 2020/03/29 14:15:48 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,8 +30,8 @@ AUTO_HEAD	=	$(MAIN_FOLD:%=auto/auto_%.h)
 
 HEAD		=	$(HEADERS:%=$(HEAD_DIR)%)
 
-mk			=	./.makegenius/mk_dependencies
-mk_p		= 	$(mk)/PAT/
+mk			=	./.makegenius
+mk_p		= 	$(mk)/srcs_path/
 include_pat	=	$(MAIN_FOLD:%=$(mk_p)pat_%.mk)
 include_pat	+=	$(mk_p)pat_.mk
 include_dep	=	$(include_pat)
