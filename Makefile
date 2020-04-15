@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/29 15:27:49 by ezalos           ###   ########.fr        #
+#    Updated: 2020/04/15 20:19:50 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -184,8 +184,9 @@ $(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)
 	$(call run_and_test, $(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIB) $(HEADERS_DIRECTORIES))
 endif
 
+DIR_PREP = $(shell find $(MASTER) -type d -exec echo {} \; | sed 's~$(MASTER)~$(DIR_OBJ)~g')
 $(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
-	mkdir -p $(DIR_OBJ)
+	mkdir -p $(DIR_PREP)
 	$(call run_and_test, $(CC) $(CFLAGS) $(HEADERS_DIRECTORIES) -o $@ -c $<)
 
 $(LIB): FORCE
