@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/04/15 20:21:44 by ezalos           ###   ########.fr        #
+#    Updated: 2020/06/28 23:26:49 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,10 @@ MASTER		= 	srcs/
 
 $(shell mkdir -p $(MASTER))
 
+
 #AUTO_HEAD	=	$(MAIN_FOLD:%=auto/auto_%.h)
-AUTO_HEAD	=	auto_$(NAME).h
+AUTO_HEAD	=	auto/auto_$(NAME)_.h
+AUTO_HEAD	+=	auto_$(NAME).h
 
 HEAD		=	$(HEADERS:%=$(HEAD_DIR)%)
 
@@ -183,7 +185,7 @@ $(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
 	@$(call run_and_test, $(CC) $(CFLAGS) $(HEADERS_DIRECTORIES) -o $@ -c $<)
 
 $(LIB): FORCE
-		$(MAKE) -C $(LIB_DIR)
+		@$(MAKE) -C $(LIB_DIR)
 
 clean :
 	rm -f $(OBJS)
