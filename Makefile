@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/06/30 12:22:39 by ezalos           ###   ########.fr        #
+#    Updated: 2020/09/27 18:23:12 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,6 +52,11 @@ OBJS	= $(PAT:$(MASTER)%.c=$(DIR_OBJ)%.o)
 ARG 	?= ldevelle
 MSG		?= "Automated commit message!"
 
+
+#PREPARATION OF OBJECT FOLDER
+DIR_PREP = $(shell find $(MASTER) -type d -exec echo {} \; | sed 's~$(MASTER)~$(DIR_OBJ)~g')
+$(shell mkdir -p $(DIR_PREP))
+$(shell find $(DIR_OBJ) -type d -exec touch {}/.gitkeep \;)
 
 SUPPORTED_COMMANDS := run
 SUPPORTS_MAKE_ARGS := $(findstring $(firstword $(MAKECMDGOALS)), $(SUPPORTED_COMMANDS))
