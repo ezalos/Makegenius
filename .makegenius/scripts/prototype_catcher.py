@@ -3,18 +3,23 @@ import os
 import sys
 import math
 
-prototype_pattern = r"(?#                                       \
+prototype_pattern = r"(?#\
 )(?:^|\n)(?#						        BEGIN condition\
-)((?#							        -\
-	)[a-zA-Z_-]+(?#				                Return type\
-	)\t+(?#							-\
-	)\*?[a-zA-Z_-]+(?#					Function name\
-		)\((?:(?#					arg begin\
-	        	)[a-zA-Z_-]+ \*?[a-zA-Z_-]+(?#	        argument\
-			)(?:,\s+)?(?#			        whitespace\
-		))+\)(?#				    	arg end\
-))(?#								-\
-)\n\{(?#							END condition\
+)((?#\
+	)[a-zA-Z_-]+(?#				            Return type\
+	)\t+(?#\
+	)\*?[a-zA-Z_-]+(?#					    Function name\
+		)\((?:(?#					        arg begin\
+	        	)void(?#\
+	       )|(?#\
+	        	)(?:(?#\
+	        		)(?:[a-zA-Z_-]+ )+(?#   Type\
+	        		)(?:\*+)?[a-zA-Z_-]+(?#	Arg name\
+					)(?:,\s+)?(?#			whitespace\
+	        	))+(?#\
+		))\)(?#				    	        arg end\
+))(?#\
+)\n\{(?#							        END condition\
 )"
 
 
@@ -33,16 +38,23 @@ def get_file_protos(file_path):
         content = f.read()
     cleaned_file = re.sub(comment_pattern, "", content)
     protos = re.findall(prototype_pattern, cleaned_file)
+    # if file_path[-19:] == "ft_switch_garbage.c":
+    #     print(content)
+    #     print(cleaned_file)
+    #     print(protos)
     return protos
 
 def sort_protos(protos):
-    sort_func = lambda x: x[re.search(r"^[^\t]+\t+", x).end():]
+    sort_func = lambda x: x[re.search(r"^[^\t]+\t+\**", x).end():]
     all_protos = []
     for f in protos:
         for p in f:
             all_protos.append(p)
+    # print(all_protos)
     protos = sorted(all_protos, key=sort_func)
     return protos
+
+
 
 def align_protos(protos):
     tab_size = 4
@@ -57,11 +69,18 @@ def align_protos(protos):
     for i in protos:
         new_proto = re.sub(r'(^[^\t]+)\t+', r'\g<1>' + r'\t' * nb_of_tabs(i), i)
         new_proto = re.sub(r'\n\t+', r'\n' + r'\t' * (math.ceil(len_type / tab_size) + 0), new_proto)
+        cut_proto = False
+        for line in new_proto.split("\n"):
+            if len(line.expandtabs(4)) > 79:
+                cut_proto = True
+        if cut_proto:
+            new_proto = re.sub(r', ', r',\n' + r'\t' * (math.ceil(len_type / tab_size) + 0), new_proto)
         tab.append(new_proto)
     protos = tab
     return protos
 
 def generate_header(protos, name="test", subname=""):
+    name = re.sub(r'[^a-zA-Z]', r'_', name)
     define = "AUTO_" + name.upper() + "_" + subname.upper() + "_H"
     header = "#ifndef " + define + "\n"
     header += "# define " + define + "\n"
@@ -71,10 +90,11 @@ def generate_header(protos, name="test", subname=""):
     header += "\n"
     header += "#endif"
     print(header)
+    return(header)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("USAGE:\n\t" + "pyhton3 " + sys.argv[0] + " folder_to_explore " + " file_to_write")
+    if len(sys.argv) != 4:
+        print("USAGE:\n\t" + "pyhton3 " + sys.argv[0] + " folder_to_explore " + " file_to_write" + " project_name")
     else:
         files = file_list(sys.argv[1])
         protos = []
@@ -82,5 +102,4 @@ if __name__ == "__main__":
             protos.append(get_file_protos(f))
         protos = sort_protos(protos)
         protos = align_protos(protos)
-        generate_header(protos)
-
+        content = generate_header(protos, sys.argv[3])
