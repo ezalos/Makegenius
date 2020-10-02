@@ -3,21 +3,35 @@ import os
 import sys
 import math
 
+
+# (?#\
+# )(?:^|\n)(?#						        BEGIN condition\
+# )((?#\
+# 	)[a-zA-Z_-]+(?#				            Return type\
+# 	)\t+(?#\
+# 	)\**[a-zA-Z_-]+(?#					    Function name\
+# 		)\((?:(?#					        arg begin\
+# 	        	)void(?#\
+# 	       )|(?#\
+# 	        	)(?:(?#\
+# 	        		)(?:[a-zA-Z_-]+ )+(?#       Type\
+# 	        		)(?:\*+)?[a-zA-Z0-9_-]+(?#	Arg name\
+# 					)(?:,\s+)?(?#			    whitespace\
+# 	        	)|(?#\
+# 	        	)\.\.\.(?#\
+# 	        	))+(?#\
+# 		))\)(?#				    	        arg end\
+# ))(?#\
+# )\n\{(?#							        END condition\
+# )
+
 prototype_pattern = r"(?#\
 )(?:^|\n)(?#						        BEGIN condition\
 )((?#\
 	)[a-zA-Z_-]+(?#				            Return type\
 	)\t+(?#\
-	)\*?[a-zA-Z_-]+(?#					    Function name\
-		)\((?:(?#					        arg begin\
-	        	)void(?#\
-	       )|(?#\
-	        	)(?:(?#\
-	        		)(?:[a-zA-Z_-]+ )+(?#   Type\
-	        		)(?:\*+)?[a-zA-Z_-]+(?#	Arg name\
-					)(?:,\s+)?(?#			whitespace\
-	        	))+(?#\
-		))\)(?#				    	        arg end\
+	)\**[a-zA-Z0-9_-]+(?#					    Function name\
+		)\((?:[^\(\)]|\([\x00-\xFF]*\))*\)(?#				    	        arg end\
 ))(?#\
 )\n\{(?#							        END condition\
 )"
