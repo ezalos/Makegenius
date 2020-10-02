@@ -26,14 +26,14 @@ import math
 # )
 
 prototype_pattern = r"(?#\
-)(?:^|\n)(?#						        BEGIN condition\
+)(?:^|\n)(?#						             BEGIN condition\
 )((?#\
-	)[a-zA-Z_-]+(?#				            Return type\
+	)(?!static)[a-zA-Z0-9_ -]+(?#			         Return type\
 	)\t+(?#\
-	)\**[a-zA-Z0-9_-]+(?#					    Function name\
-		)\((?:[^\(\)]|\([\x00-\xFF]*\))*\)(?#				    	        arg end\
+	)\**[a-zA-Z0-9_-]+(?#					     Function name\
+		)\((?:[^\(\)]|\([\x00-\xFF]*\))*\)(?#	 arg end\
 ))(?#\
-)\n\{(?#							        END condition\
+)\n\{(?#							             END condition\
 )"
 
 
@@ -77,7 +77,8 @@ def align_protos(protos):
     for i in protos:
         if type_len(i) > len_type:
             len_type = type_len(i)
-    len_type += 1 + 1
+    len_type += 1
+    len_type = len_type + tab_size - (len_type % tab_size)
     nb_of_tabs = lambda x: math.ceil((len_type - type_len(x)) / tab_size)
     tab = []
     for i in protos:
@@ -85,7 +86,7 @@ def align_protos(protos):
         new_proto = re.sub(r'\n\t+', r'\n' + r'\t' * (math.ceil(len_type / tab_size) + 0), new_proto)
         cut_proto = False
         for line in new_proto.split("\n"):
-            if len(line.expandtabs(4)) > 79:
+            if len(line.expandtabs(tab_size)) > 79:
                 cut_proto = True
         if cut_proto:
             new_proto = re.sub(r', ', r',\n' + r'\t' * (math.ceil(len_type / tab_size) + 0), new_proto)
